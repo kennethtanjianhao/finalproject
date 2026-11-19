@@ -2,7 +2,7 @@ Package: finalproject
 Title: project code and narrative
 Version: 0.0.3
 Authors@R:
-    person(given = "Kenneth,
+    person(given = "Kenneth",
            family = "Tan",
            role = c("aut", "cre"),
            email = "ken_tan@hsph.harvard.edu",
