@@ -1,0 +1,59 @@
+---
+title: "project_plan"
+author: "Kenneth Tan"
+format: html
+editor: visual
+---
+
+To: BST260 Teaching Team, Fall 2026\
+Project repository: <https://github.com/kennethtanjianhao/finalproject>
+
+## Overview
+
+I plan to conduct two reproducible analyses using datasets encountered in BST260. The first examines an individual-level association between body mass index (BMI) and blood pressure. The second describes changes in state-level homicide mortality between 2019 and 2022. Both analyses will use straightforward visualization and statistical models, with particular attention to missing data, interpretation, and limitations.
+
+## Vignette 1: BMI and systolic blood pressure
+
+**Research question:** Among US adults aged 20 years and older in the educational NHANES 2011–2012 sample, how is BMI associated with systolic blood pressure after adjusting for age and sex?
+
+**Dataset and provenance:** I will use the `NHANES` dataset in the R package `NHANES`, derived from the US National Health and Nutrition Examination Survey conducted by the CDC's National Center for Health Statistics. I will restrict the analysis to `SurveyYr == "2011_12"`. The package supplies a resampled dataset for teaching purposes, so the analysis will not be presented as a formal nationally representative NHANES survey estimate. Source and variable documentation: <https://search.r-project.org/CRAN/refmans/NHANES/html/NHANES.html>.
+
+**Unit of analysis and population:** One adult survey participant, aged at least 20, in the selected sample.
+
+**Exposure:** `BMI` (kg/m²), modeled as a continuous variable. I will report its distribution and examine whether a straight-line relationship is reasonable. Missing BMI observations will not be treated as zero; they will be excluded from the primary complete-case regression and counted in the missing-data summary.
+
+**Outcome:** `BPSysAve`, average systolic blood pressure in mmHg, a continuous variable. Participants missing this measurement will be excluded from the primary regression and counted separately.
+
+**Confounders selected in advance:** `Age` (continuous years) and `Gender` (male/female as recorded in the dataset). Age and sex plausibly relate to both BMI and blood pressure. I will not select adjustment variables merely because they are statistically significant. Missing age or gender observations will also be excluded from the complete-case model, and I will report the number of complete cases.
+
+**Planned analysis:** I will summarize age, BMI, systolic blood pressure, and sex; create a scatterplot with a fitted line; and compare an unadjusted linear regression (`BPSysAve ~ BMI`) with an adjusted model (`BPSysAve ~ BMI + Age + Gender`). I will report coefficients and confidence intervals in clinically interpretable units and inspect residual plots. Conclusions will concern association, not causation.
+
+**Anticipated limitations:** Cross-sectional data cannot establish temporal order or causality. The educational NHANES dataset does not support a full survey-design analysis, and residual confounding and complete-case selection may affect results.
+
+## Vignette 2: Changes in state-level homicide mortality
+
+**Research question:** Among US states and Washington, DC, how did age-adjusted homicide death rates change from 2019 to 2022, accounting for stable differences between states?
+
+**Dataset and provenance:** I will use `cdcmurd` from the `finalproject` R package, the CDC homicide mortality dataset introduced in BST260 Problem Set 3. The underlying source is the CDC National Center for Health Statistics' state homicide mortality statistics: <https://www.cdc.gov/nchs/state-stats/deaths/homicide.html>. I will document the specific package dataset and the years extracted. Class reference: <https://vjcitn.github.io/2026vjc/psets2026/pset-03-various.html>.
+
+**Unit of analysis and population:** One state-year observation. The comparison will include the 50 US states and Washington, DC when a usable rate is available in both 2019 and 2022.
+
+**Exposure:** `YEAR`, coded as a two-level factor (2019 as the reference category; 2022 as the comparison). This represents calendar period, not a causal intervention. Records with missing or unusable year or location labels will be excluded; analysis will be restricted to these two years and valid state/DC locations.
+
+**Outcome:** `Death.Rate`, the CDC's age-adjusted homicide death rate per 100,000 population, a continuous variable. I will report the number of missing rates and restrict paired within-state comparisons to locations with nonmissing values in both years. I will not impute suppressed or unavailable rates as zero.
+
+**Adjustment variables selected in advance:** State (`Location`) will be included as a fixed effect, accounting for stable differences between states such as baseline demographics and long-standing contextual factors. This does not adjust for time-varying changes within states. I will also use US census region for descriptive comparisons, not as a substitute for the state adjustment.
+
+**Planned analysis:** I will summarize the distribution of rates for both years, graph each state's change, and calculate within-state absolute differences in deaths per 100,000 population. A simple fixed-effects linear model (`Death.Rate ~ factor(YEAR) + factor(Location)`) on the paired states will summarize the average within-state change. I will describe differences across geographic regions without interpreting them as causal effects.
+
+**Anticipated limitations:** This is an ecological analysis of aggregated state data; conclusions about individuals are not warranted. Changes across years cannot be attributed to one policy or event. Missing or suppressed rates may affect which states can be compared, and an equally weighted average across states is not the US population-wide homicide rate.
+
+## Final deliverables
+
+I will develop the analyses as two separate Quarto vignettes in a valid R package and publish them through its pkgdown GitHub Pages website. Each vignette will provide (1) the investigative objective, (2) data provenance and variable definitions, (3) descriptive statistics and visualizations, (4) reproducible analysis code, and (5) a scientific discussion of findings and limitations. The repository `README.md` will introduce both investigations and link to the full vignettes.
+
+I will use `ggplot2` for graphics and base R or `dplyr` for data summaries, with a small reusable R helper function for consistent summary statistics across groups. Numerical findings will be written only after running and inspecting the analyses.
+
+## AI use disclosure
+
+I used ChatGPT to discuss and clarify several concepts related to the project from the datasets I chose, including research question formulation, variable selection, potential confounders, and appropriate statistical methods. AI was also used to help organize and refine the project proposal.
